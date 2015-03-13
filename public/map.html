@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>A simple map</title>
+<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+<style>
+  body { margin:0; padding:0; }
+  #map { position:absolute; top:0; bottom:0; width:100%; }
+  .map-marker {
+    background: url("http://r.citymaps.com/riak/images/map-pin");
+    background-size: 100% 100%;
+    box-sizing: border-box;
+    padding: 3px;
+    position: relative;
+  }
+  .map-marker img {
+    border-radius: 5px;
+    height: 44px;
+    width: 44px;
+  }
+  .map-marker .meta {
+    border: 1px solid red;
+    position: absolute;
+      left: 50px;
+    width: 100px;
+  }
+</style>
+</head>
+<body>
+<div id='map'></div>
+<script>
+
+L.mapbox.accessToken = 'pk.eyJ1IjoiYmVuLWNpdHltYXBzIiwiYSI6Imt2SVhSa3MifQ.7Llc31vHrYdpHRj9RTOfFQ';
+var map = L.mapbox.map('map', 'examples.map-i86nkdio')
+  .setView([40.74, -74], 13);
+
+var render = function(markers) {
+
+  console.log(markers);
+  var avatar_base_url = 'http://r.citymaps.com/riak/';
+
+  console.log("Making a marker group with "+markers.length+" items");
+  var layerGroup = new L.featureGroup();
+
+  markers.forEach(function(m, i) {
+    m.marker_image_url = avatar_base_url + (m.logo_image ? "business_logos/"+m.logo_image : "category_icons4_app/"+m.category_icon);
+
+    var icon = L.divIcon({
+      className: 'map-marker map-marker-'+i,
+      html: '<div class="meta">'+m.business.name+'</div><img src="'+m.image_url+'" />',
+      iconSize:   [46, 54], // size of the icon
+      title: m.name,
+      iconAnchor: [23, 54]  // point of the icon which will correspond to marker's location
+    });
+    var marker = L.marker([m.business.lat,m.business.lon], { icon: icon });
+    map.addLayer(marker);
+  });
+};
+
+map.on('zoomend', function() {
+  console.log("zoom");
+  $('.map-marker .meta')
+});
+
+$(function() {
+  $.ajax({
+    url: 'http://ndev-coreapi.citymaps.com/v2/map/e916e5be-7fcc-4d42-ad00-1d77c577cf9c/markers?enriched=true',
+    success: function(json) {
+      render(json.markers);
+    }
+  });
+});
+
+</script>
+</body>
+</html>

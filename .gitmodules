@@ -1,0 +1,3 @@
+[submodule "citymaps_js_api"]
+	path = citymaps_js_api
+	url = git@bitbucket.org:citymaps/citymaps_js_api.git

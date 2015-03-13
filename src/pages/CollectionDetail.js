@@ -7,14 +7,14 @@ import $ from 'jquery';
 module.exports = React.createClass({
 
   componentDidMount: function() {
-    console.log("Home mounted!");
+    console.log("Collection Details mounted!");
   },
 
   render: function() {
 
     return (
-      <div id="home">
-        <h1>Title</h1>
+      <div id="collection-detail">
+        <h1>{this.props.name}</h1>
         <ul>
           <li><a href="/"   >Home</a></li>
           <li><a href="/map">Page</a></li>

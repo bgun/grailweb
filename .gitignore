@@ -1,0 +1,8 @@
+# npm install
+node_modules/
+
+# gulp build
+build/
+
+# don't track osx turds
+.DS_Store

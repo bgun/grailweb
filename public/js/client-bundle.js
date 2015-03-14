@@ -26,35 +26,44 @@ _.each(routes, function (r) {
   console.log("Added route: %s", r.path);
   page(r.path, function (req, res) {
     r.route.call(null).then(function (component) {
+      // Mount the component to #main
       var el = React.createElement(component);
       React.render(el, document.getElementById("main"));
     });
   });
 });
 
-$(document).on("click", "a[href^='/']", function (e) {
-  e.preventDefault();
+$(function () {
 
-  var href = $(e.currentTarget).attr("href");
-  console.log("original", href);
+  console.log("jQuery reporting for duty");
+  // Someday we may not need jQuery at all, since we're using superagent
+  // for unified http/ajax calls and Bluebird to abstract those calls into
+  // Promises.
 
-  if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-    var url = href.replace(/^\//, "") || "/";
-    console.log("new", url);
-    history.pushState(null, null, url);
-    page.push(url);
-    return false;
-  }
+  $(document).on("click", "a[href^='/']", function (e) {
+    e.preventDefault();
+
+    var href = $(e.currentTarget).attr("href");
+    console.log("original", href);
+
+    if (!e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+      var url = href.replace(/^\//, "") || "/";
+      console.log("new", url);
+      history.pushState(null, null, url);
+      page.push(url);
+      return false;
+    }
+  });
+  window.onpopstate = function (e) {
+    e.preventDefault();
+    console.log(webRouter.history.pop(), e);
+    var url = webRouter.history[webRouter.history.length - 1];
+    console.warn("onpopstate url: ", url);
+    // page(url);
+    // Handle the back (or forward) buttons here
+    // Will NOT handle refresh, use onbeforeunload for this.
+  };
 });
-window.onpopstate = function (e) {
-  e.preventDefault();
-  console.log(webRouter.history.pop(), e);
-  var url = webRouter.history[webRouter.history.length - 1];
-  console.warn("onpopstate url: ", url);
-  //webRouter.navigate(url, { trigger: true });
-  // Handle the back (or forward) buttons here
-  // Will NOT handle refresh, use onbeforeunload for this.
-};
 /**
  * client.js
  * =========
@@ -142,7 +151,7 @@ module.exports = React.createClass({
       React.createElement(
         "h1",
         null,
-        "Title"
+        "Title 3"
       ),
       React.createElement(
         "ul",
@@ -182,6 +191,16 @@ var CollectionRoutes = _interopRequire(require("./routes/CollectionRoutes.js"));
 var routes = [{ path: "/", route: StaticRoutes.showHomePage }, { path: "/collection/:map_id", route: CollectionRoutes.showCollectionDetail }];
 
 module.exports = routes;
+/**
+ * router.js
+ * =========
+ * Common routing between client and server.
+ * All routes are imported here. Routes return promises for page-level
+ * React components, which are then handled on the client by mounting the
+ * component, and on the server by rendering static HTML.
+ *
+ * Author: Ben Gundersen
+ */
 },{"./routes/CollectionRoutes.js":5,"./routes/StaticRoutes.js":6}],5:[function(require,module,exports){
 "use strict";
 

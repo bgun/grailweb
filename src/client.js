@@ -41,11 +41,10 @@ _.each(routes, function(r) {
 
 $(function() {
 
-  // 
+  console.log("jQuery reporting for duty")
   // Someday we may not need jQuery at all, since we're using superagent
   // for unified http/ajax calls and Bluebird to abstract those calls into
   // Promises.
-  console.log("jQuery reporting for duty")
 
   $(document).on("click", "a[href^='/']", function(e) {
     e.preventDefault();

@@ -151,7 +151,7 @@ module.exports = React.createClass({
       React.createElement(
         "h1",
         null,
-        "Title 3"
+        "Title 6"
       ),
       React.createElement(
         "ul",

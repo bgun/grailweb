@@ -14,7 +14,7 @@ module.exports = React.createClass({
 
     return (
       <div id="home">
-        <h1>Title 3</h1>
+        <h1>Title 7</h1>
         <ul>
           <li><a href="/"   >Home</a></li>
           <li><a href="/map">Page</a></li>

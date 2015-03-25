@@ -6,6 +6,7 @@ var server     = require('gulp-express');
 var watch      = require('gulp-watch');
 
 // Browserify and livereload refresh
+// Babel must complete before browserify
 gulp.task('browserify', ['babel'], function() {
 
   gulp.src('build/js/client.js')
